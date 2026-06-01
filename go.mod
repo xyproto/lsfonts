@@ -3,6 +3,7 @@ module github.com/xyproto/lsfonts
 go 1.26.3
 
 require (
+	github.com/xyproto/clip v1.0.0
 	github.com/xyproto/imagepreview v1.2.3
 	github.com/xyproto/vt v1.9.11
 	golang.org/x/image v0.41.0
