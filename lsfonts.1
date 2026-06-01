@@ -1,0 +1,148 @@
+.TH LSFONTS 1 "May 2026" "lsfonts 0.1.0" "User Commands"
+.SH NAME
+lsfonts \- list installed fonts with rendered previews
+.SH SYNOPSIS
+.B lsfonts
+[\fB\-l\fR]
+[\fB\-v\fR | \fB\-\-version\fR]
+[\fB\-h\fR | \fB\-\-help\fR]
+.SH DESCRIPTION
+.B lsfonts
+scans the standard system font directories, parses every
+.IR .otf ,
+.IR .ttf ,
+and
+.IR .ttc
+file it finds, and shows one card per face in a scrollable, searchable list.
+Each card renders the family and style header in a sans-serif UI font and
+shows a sample line ("AaBbCc 0123 The quick brown fox\(em") in the font
+itself, so the typeface can be evaluated at a glance.
+.PP
+When the terminal supports an inline image protocol
+.RB ( Kitty ,
+.BR iTerm2 ,
+or
+.BR Sixel )
+lsfonts opens an interactive browser. Otherwise it falls back to a plain
+text listing equivalent to
+.B "lsfonts \-l" .
+.SH OPTIONS
+.TP
+.B \-l
+Print a plain text listing (one font per line, family/style and path
+separated by a tab) to standard output and exit. Useful for piping into
+other tools.
+.TP
+.BR \-v ", " \-\-version
+Print the lsfonts version and exit.
+.TP
+.BR \-h ", " \-\-help
+Print a short usage summary and exit.
+.SH "INTERACTIVE KEYS"
+.TP
+.BR Up ", " Down ", " k ", " j
+Move the selection one card. The arrow keys also work while the filter
+prompt is open, so the user can scroll through matches without leaving
+search mode.
+.TP
+.BR PgUp ", " PgDn ", " Space ", " b
+Move one page (Space pages forward, b pages back).
+.TP
+.BR g ", " Home
+Jump to the first card.
+.TP
+.BR G ", " End
+Jump to the last card.
+.TP
+.B /
+Open the incremental, case-insensitive substring filter on family name and
+file path. Any existing query is preserved so the filter can be refined
+rather than retyped.
+.TP
+.B Enter
+Keep the current filter and leave the prompt. The active filter remains
+visible in the status bar.
+.TP
+.BR Backspace ", " Ctrl-U
+Inside the prompt: delete one character / clear the whole query while
+remaining in search mode.
+.TP
+.B Esc
+Inside the prompt: cancel search and clear the filter. Outside the prompt:
+clear an active filter; if no filter is active, quit.
+.TP
+.BR q ", " Ctrl-C
+Quit unconditionally.
+.SH "GRAPHICS DETECTION"
+The image protocol is selected from the environment:
+.IP \[bu] 2
+.B Kitty
+when
+.B TERM
+is
+.IR xterm-kitty .
+.IP \[bu] 2
+.B iTerm2
+when
+.B TERM_PROGRAM
+is
+.IR iTerm.app .
+.IP \[bu] 2
+.B Sixel
+when
+.B TERM
+starts with
+.IR foot ", " mlterm ", " yaft ", " contour ", or " wezterm .
+.PP
+Setting
+.B NO_COLOR
+disables graphics and forces the plain text fallback.
+.SH FILES
+.PP
+.B Linux
+.RS
+.IR /usr/share/fonts ,
+.IR /usr/local/share/fonts ,
+.IR ~/.local/share/fonts ,
+.IR ~/.fonts
+.RE
+.PP
+.B FreeBSD / OpenBSD / NetBSD / DragonFly
+.RS
+.IR /usr/local/share/fonts ,
+.IR /usr/X11R7/lib/X11/fonts ,
+.IR /usr/pkg/share/fonts ,
+.IR ~/.local/share/fonts ,
+.IR ~/.fonts
+.RE
+.PP
+.B macOS
+.RS
+.IR /Library/Fonts ,
+.IR /System/Library/Fonts ,
+.IR /System/Library/Fonts/Supplemental ,
+.IR ~/Library/Fonts
+.RE
+.PP
+.B Windows
+.RS
+.IR %WINDIR%\eFonts ,
+.IR %LOCALAPPDATA%\eMicrosoft\eWindows\eFonts
+.RE
+.SH "EXIT STATUS"
+.TP
+.B 0
+Normal exit.
+.TP
+.B 1
+No fonts were found in the standard directories, or the interactive UI
+failed to start.
+.TP
+.B 2
+A command-line option could not be parsed.
+.SH AUTHOR
+Alexander F. R\(/odseth
+.SH "SEE ALSO"
+.BR fc-list (1),
+.BR fc-match (1),
+.BR fc-cache (1)
