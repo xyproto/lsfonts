@@ -2,8 +2,7 @@ package main
 
 import "testing"
 
-// TestRenderSample verifies that the first discovered font produces a
-// non-empty preview mask. Skipped when no fonts are installed.
+// TestRenderSample: the first discovered font produces non-empty masks.
 func TestRenderSample(t *testing.T) {
 	entries := DiscoverFonts()
 	if len(entries) == 0 {

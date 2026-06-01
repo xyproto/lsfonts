@@ -1,8 +1,6 @@
-// lsfonts lists every font installed on the system as a scrollable,
-// searchable, visually-rendered list. When the terminal supports an
-// inline image protocol (Kitty, iTerm2, or Sixel) every entry is shown
-// rendered in its own typeface; otherwise lsfonts prints a plain text
-// listing of the discovered fonts.
+// lsfonts lists installed fonts as a scrollable, searchable card view in
+// terminals with inline graphics (Kitty/iTerm2/Sixel), or as a plain text
+// list elsewhere.
 package main
 
 import (
@@ -13,12 +11,9 @@ import (
 	"github.com/xyproto/imagepreview"
 )
 
-// version is printed by -v/--version. Bumped manually with each release.
 const version = "0.1.0"
 
-// usage is the text shown for -h/--help and on flag errors. Keeping the
-// message inline (instead of relying on flag.PrintDefaults) lets us match
-// the wording of the man page so users see the same help in both places.
+// usage mirrors the man page so -h and lsfonts(1) stay in sync.
 const usage = `lsfonts ` + version + ` -- list installed fonts with rendered previews
 
 Usage:
@@ -37,18 +32,18 @@ Interactive keys:
   /                    open the filter prompt (preserves the current query)
   Enter                keep the filter, leave the prompt
   Backspace, Ctrl-U    edit / clear the filter while typing
+  Ctrl-C               copy the selected font name to the clipboard
+                       (suitable for CSS, Vim/Neovim guifont, Pango, etc.)
   Esc                  clear an active filter, or quit when none is active
-  q, Ctrl-C            quit
+  q, Ctrl-D            quit
 
 When stdout is not a Kitty, iTerm2, or Sixel terminal, lsfonts falls back
 to the plain text listing automatically.
 `
 
 func main() {
-	// Register flags. The standard flag package treats "-name" and
-	// "--name" identically, so registering "version" gives both -version
-	// and --version. The "-v" short form is a separate bool flag pointing
-	// at the same destination so both forms can be passed.
+	// flag treats -name and --name identically, so registering "version"
+	// covers both --version and -version; -v is a separate alias.
 	var (
 		listOnly    bool
 		showVersion bool
@@ -61,9 +56,7 @@ func main() {
 	fs.Usage = func() { fmt.Fprint(os.Stderr, usage) }
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
-		// flag.ContinueOnError already wrote a diagnostic to Stderr.
-		// -h / --help is reported as flag.ErrHelp; treat it as success.
-		if err == flag.ErrHelp {
+		if err == flag.ErrHelp { // -h/--help is success, not an error
 			fmt.Fprint(os.Stdout, usage)
 			return
 		}
@@ -92,9 +85,7 @@ func main() {
 	}
 }
 
-// printPlainList writes one line per entry as "Family — Style\tpath[:index]"
-// to stdout. Used as the fallback for terminals without inline graphics and
-// when the user passes -l.
+// printPlainList writes "Family — Style\tpath[:index]" per entry to stdout.
 func printPlainList(entries []FontEntry) {
 	for _, e := range entries {
 		if e.Index > 0 {

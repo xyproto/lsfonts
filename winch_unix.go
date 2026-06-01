@@ -8,9 +8,7 @@ import (
 	"syscall"
 )
 
-// notifyWinch arranges for ch to receive every SIGWINCH delivered to the
-// process. On Unix this is how terminals notify foreground programs that
-// the window has been resized.
+// notifyWinch wires ch to SIGWINCH (terminal resize).
 func notifyWinch(ch chan<- os.Signal) {
 	signal.Notify(ch, syscall.SIGWINCH)
 }

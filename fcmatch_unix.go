@@ -8,11 +8,9 @@ import (
 	"strings"
 )
 
-// fcMatchUI runs fc-match for pattern and returns the resolved font file
-// path. Returns "" when fc-match is missing, errors, or yields a non-
-// existent path. Unlike Orbiton's variant we don't verify the returned
-// family -- any sans-serif fontconfig resolves to is good enough for the
-// UI label strip.
+// fcMatchUI returns fc-match's resolved file path for pattern, or "" on
+// any failure. The family isn't verified -- any sans-serif fontconfig
+// picks is good enough for the UI label strip.
 func fcMatchUI(pattern string) string {
 	out, err := exec.Command("fc-match", "--format=%{file}", pattern).Output()
 	if err != nil {

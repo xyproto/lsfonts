@@ -8,17 +8,14 @@ import (
 	"golang.org/x/image/font/opentype"
 )
 
-// uiFontOnce guards lazy loading of the parsed UI font, which is shared
-// across every preview row that needs a readable family/style label.
 var (
 	uiFontOnce   sync.Once
 	uiFontParsed *opentype.Font
 )
 
-// uiFont returns a parsed sans-serif font used to render entry labels
-// (family + style) so symbol/icon faces remain readable. Returns nil when
-// no candidate could be found; callers then fall back to the entry's own
-// face for the label, which is the previous behaviour.
+// uiFont returns a shared sans-serif used for entry labels so symbol/icon
+// faces stay readable. nil means no candidate was found; callers should
+// fall back to the entry's own face.
 func uiFont() *opentype.Font {
 	uiFontOnce.Do(func() {
 		if p := findUIFontPath(); p != "" {
@@ -34,10 +31,8 @@ func uiFont() *opentype.Font {
 	return uiFontParsed
 }
 
-// findUIFontPath locates a readable sans-serif font on the host. fontconfig
-// is tried first because its result reflects the distro's configured default;
-// a directory scan over known filenames is the fallback when fc-match is
-// unavailable (typical on Windows and minimal containers).
+// findUIFontPath returns a readable sans-serif. fontconfig first (reflects
+// distro defaults); directory scan as the fontconfig-less fallback.
 func findUIFontPath() string {
 	patterns := []string{
 		"DejaVu Sans:style=Book",
@@ -53,8 +48,6 @@ func findUIFontPath() string {
 		}
 	}
 
-	// Filename fallbacks for hosts without fontconfig. Order roughly
-	// matches the patterns above so the visual style stays consistent.
 	candidates := []string{
 		"DejaVuSans.ttf",
 		"LiberationSans-Regular.ttf",
@@ -71,8 +64,8 @@ func findUIFontPath() string {
 	return ""
 }
 
-// scanForFontName looks for any of names directly under dir or one level deep.
-// One level of depth covers per-family subdirectories like /usr/share/fonts/dejavu/.
+// scanForFontName checks dir and its immediate subdirectories (covers
+// per-family layouts like /usr/share/fonts/dejavu/) for any of names.
 func scanForFontName(dir string, names []string) string {
 	for _, name := range names {
 		p := filepath.Join(dir, name)
@@ -98,7 +91,4 @@ func scanForFontName(dir string, names []string) string {
 	return ""
 }
 
-// fcMatchUI is provided per-platform: a real fontconfig call on Unix-likes,
-// and a stub returning "" on Windows where fc-match is not part of the base
-// system. Selecting at compile time avoids spawning a process that will
-// never succeed on platforms without fontconfig.
+// fcMatchUI is implemented per-platform in fcmatch_*.go.

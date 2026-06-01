@@ -67,11 +67,29 @@ visible in the status bar.
 Inside the prompt: delete one character / clear the whole query while
 remaining in search mode.
 .TP
+.B Ctrl-C
+Copy the selected entry's name to the system clipboard in a portable
+"Family Style" form (e.g.
+.IR "DejaVu Sans Mono Bold" ),
+suitable for dropping straight into CSS
+.RB ( "font-family: \(dqDejaVu Sans Mono Bold\(dq;" ),
+Vim/Neovim
+.RB ( "set guifont=DejaVu\e Sans\e Mono\e Bold:h11" ),
+or Pango/GTK font strings. A confirmation flash is shown in the status bar.
+On systems with no clipboard backend (no
+.BR wl-copy (1),
+.BR xclip (1),
+.BR xsel (1),
+.BR pbcopy (1)
+or
+.BR clip.exe ),
+the flash reports the failure.
+.TP
 .B Esc
 Inside the prompt: cancel search and clear the filter. Outside the prompt:
 clear an active filter; if no filter is active, quit.
 .TP
-.BR q ", " Ctrl-C
+.BR q ", " Ctrl-D
 Quit unconditionally.
 .SH "GRAPHICS DETECTION"
 The image protocol is selected from the environment:

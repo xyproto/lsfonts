@@ -14,8 +14,7 @@ func systemFontDirs() []string {
 	}
 	dirs := []string{filepath.Join(winDir, "Fonts")}
 	if home, err := os.UserHomeDir(); err == nil && home != "" {
-		// Per-user fonts installed without admin rights live here on
-		// Windows 10+ (the "Install for me only" option in the Fonts panel).
+		// Per-user fonts (Windows 10+ "Install for me only").
 		dirs = append(dirs,
 			filepath.Join(home, "AppData", "Local", "Microsoft", "Windows", "Fonts"))
 	}
