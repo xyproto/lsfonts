@@ -179,8 +179,9 @@ func (s *uiState) ensureCursorVisible() {
 
 // drawFrame composes one preview page image + status strip and flushes.
 func (s *uiState) drawFrame() {
-	previewRows := uint(s.nVisible * rowsPerEntry)
-	pixH := s.nVisible * s.pixRow
+	availRows := int(s.rows) - statusRows
+	previewRows := uint(availRows)
+	pixH := availRows * int(s.cellH)
 	img := image.NewRGBA(image.Rect(0, 0, s.pixW, pixH))
 
 	cardX0 := int(s.cellW)
