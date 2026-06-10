@@ -6,7 +6,7 @@ require (
 	github.com/xyproto/clip v1.0.0
 	github.com/xyproto/imagepreview v1.2.3
 	github.com/xyproto/vt v1.9.11
-	golang.org/x/image v0.41.0
+	golang.org/x/image v0.42.0
 )
 
 require (
@@ -23,8 +23,8 @@ require (
 	github.com/xyproto/env/v2 v2.5.6 // indirect
 	github.com/xyproto/oksvg v1.0.1 // indirect
 	github.com/xyproto/palgen v1.7.3 // indirect
-	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/term v0.43.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/term v0.44.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
